@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>家計簿アプリ</title>
+  <script>
+    function addRecord() {
+      // フォームから値を取得
+      var item = document.getElementById("item").value;
+      var amount = parseFloat(document.getElementById("amount").value);
+
+      // ローカルストレージから既存のレコードを取得
+      var records = JSON.parse(localStorage.getItem("records")) || [];
+
+      // 新しいレコードを作成
+      var record = {
+        item: item,
+        amount: amount
+      };
+
+      // 新しいレコードを追加
+      records.push(record);
+
+      // ローカルストレージに保存
+      localStorage.setItem("records", JSON.stringify(records));
+
+      // レコードを表示
+      displayRecords();
+    }
+
+    function resetRecords() {
+      // ローカルストレージをクリア
+      localStorage.removeItem("records");
+
+      // レコードを表示
+      displayRecords();
+    }
+
+    function displayRecords() {
+      // ローカルストレージからレコードを取得
+      var records = JSON.parse(localStorage.getItem("records")) || [];
+
+      // レコードを表示するエリアを取得
+      var recordsContainer = document.getElementById("records-container");
+
+      // エリアをクリア
+      recordsContainer.innerHTML = "";
+
+      // レコードを表示
+      for (var i = 0; i < records.length; i++) {
+        var record = records[i];
+
+        // レコードの要素を作成
+        var recordElement = document.createElement("div");
+        recordElement.innerHTML = "項目: " + record.item + ", 金額: " + record.amount + "円";
+
+        // エリアにレコードを追加
+        recordsContainer.appendChild(recordElement);
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>家計簿アプリ</h1>
+
+  <h2>新しいレコードの追加</h2>
+  <label>項目: </label>
+  <select id="item">
+    <option value="雑費">雑費</option>
+    <option value="食費">食費</option>
+    <option value="光熱費">光熱費</option>
+  </select>
+  <label>金額: </label>
+  <input type="number" id="amount" step="1000">
+  <button onclick="addRecord()">追加</button>
+  <button onclick="resetRecords()">リセット</button>
+
+  <h2>家計簿</h2>
+  <div id="records-container"></div>
+
+  <script>
+    // ページ読み込み時に保存されたレコードを表示
+    displayRecords();
+  </script>
+</body>
+</html>
